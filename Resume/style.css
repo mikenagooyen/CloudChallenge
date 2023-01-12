@@ -8,23 +8,28 @@
   font: 14px Roboto Condensed, sans-serif;
   color: #666666
 }
+
 .contact{
-  font: 14px Roboto Condensed, sans-serif;
+  font
+  : 14px Roboto Condensed, sans-serif;
 }
 .name{
   font: 36px Oswald, sans-serif;
   color: #424242
 }
+
 .section{
   font: 24px Oswald, sans-serif;
   font-weight: bold;
   color: #424242
 }
-.content{
-  font: 14px Helvetica, sans-serif;
-  color: #424242
-}
+
 .title{
   font: 18px Oswald, sans-serif;
   color: black
+}
+
+.content{
+  font: 14px Helvetica, sans-serif;
+  color: #424242
 }
