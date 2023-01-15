@@ -12,7 +12,7 @@ Globals:
     MemorySize: 128
 
 Resources:
-  mnguyen-resume:
+  resume:
     Type: AWS::S3::Bucket
     Properties:
       AccessControl: PublicRead
@@ -34,9 +34,9 @@ Resources:
             Resource: !Join
               - ""
               - - "arn:aws:s3:::"
-                - !Ref mnguyen-resume
+                - !Ref resume
                 - /*
-      Bucket: !Ref mnguyen-resume
+      Bucket: !Ref resume
 
   HelloWorldFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
