@@ -11,6 +11,17 @@ Globals:
     Timeout: 3
     MemorySize: 128
 
+Parameters:
+  DomainName:
+    Description: Domain Name
+    Type: String
+    Default: mnguyen-resume.com
+
+  HostedZoneId:
+    Description: Route 53 Hosted Zone Id
+    Type: String
+    Default: Z05274811BTEIO9YAPJZB
+
 Resources:
 
   resume:
@@ -24,10 +35,10 @@ Resources:
   route53Record:
     Type: "AWS::Route53::RecordSetGroup"
     Properties:
-      HostedZoneId: Z05274811BTEIO9YAPJZB
+      HostedZoneId: !Ref HostedZoneId
       RecordSets:
-        - Name: mnguyen-resume.com
-          Type: AAAA
+        - Name: !Ref DomainName
+          Type: A
           AliasTarget:
             HostedZoneId: Z2FDTNDATAQYW2
             DNSName: !GetAtt resumeDistribution.DomainName
@@ -35,7 +46,7 @@ Resources:
   resumeCertificate:
     Type: AWS::CertificateManager::Certificate
     Properties:
-      DomainName: mnguyen-resume.com
+      DomainName: !Ref DomainName
       ValidationMethod: DNS
 
   resumeDistribution:
@@ -47,20 +58,29 @@ Resources:
           MinimumProtocolVersion: TLSv1.2_2021
           SslSupportMethod: sni-only
         Aliases:
-          - mnguyen-resume.com
+          - !Ref DomainName
         DefaultCacheBehavior:
-          ViewerProtocolPolicy: redirect-to-https
-          TargetOriginId: mnguyen-bucket.s3-website-us-east-1.amazonaws.com
+          ViewerProtocolPolicy: "redirect-to-https"
+          TargetOriginId: !Sub ${resume}.s3.${AWS::Region}.amazonaws.com
           # "Managed-CachingOptimized" from https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html
           CachePolicyId: "658327ea-f89d-4fab-a63d-7e88639e58f6"
           ForwardedValues:
             QueryString: false
         HttpVersion: "http2"
+        IPV6Enabled: true
         Origins:
-          - DomainName: mnguyen-bucket.s3-website-us-east-1.amazonaws.com
-            Id: mnguyen-bucket.s3-website-us-east-1.amazonaws.com
+          - DomainName: !Sub ${resume}.s3.${AWS::Region}.amazonaws.com
+            Id: !Sub ${resume}.s3.${AWS::Region}.amazonaws.com
             CustomOriginConfig:
-              OriginProtocolPolicy: match-viewer
+              HTTPPort: 80
+              HTTPSPort: 443
+              OriginKeepaliveTimeout: 5
+              OriginProtocolPolicy: "http-only"
+              OriginReadTimeout: 30
+              OriginSSLProtocols:
+                - TLSv1
+                - TLSv1.1
+                - TLSv1.2
         Enabled: "true"
         DefaultRootObject: index.html
 
