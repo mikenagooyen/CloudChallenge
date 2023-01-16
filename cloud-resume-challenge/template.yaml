@@ -12,6 +12,10 @@ Globals:
     MemorySize: 128
 
 Parameters:
+  BucketName:
+    Description: S3 Bucket Name
+    Default: mnguyen-bucket
+
   DomainName:
     Description: Domain Name
     Type: String
@@ -30,7 +34,7 @@ Resources:
       AccessControl: PublicRead
       WebsiteConfiguration:
         IndexDocument: index.html
-      BucketName: mnguyen-bucket
+      BucketName: !Ref BucketName
   
   route53Record:
     Type: "AWS::Route53::RecordSetGroup"
