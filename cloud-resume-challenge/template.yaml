@@ -51,11 +51,11 @@ Resources:
         DefaultCacheBehavior:
           ViewerProtocolPolicy: redirect-to-https
           TargetOriginId: mnguyen-bucket.s3-website-us-east-1.amazonaws.com
-          DefaultTTL: 0
-          MinTTL: 0
-          MaxTTL: 0
+          # "Managed-CachingOptimized" from https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html
+          CachePolicyId: "658327ea-f89d-4fab-a63d-7e88639e58f6"
           ForwardedValues:
             QueryString: false
+        HttpVersion: "http2"
         Origins:
           - DomainName: mnguyen-bucket.s3-website-us-east-1.amazonaws.com
             Id: mnguyen-bucket.s3-website-us-east-1.amazonaws.com
