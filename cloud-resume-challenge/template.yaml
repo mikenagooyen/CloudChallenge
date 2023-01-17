@@ -36,6 +36,18 @@ Resources:
       WebsiteConfiguration:
         IndexDocument: index.html
       BucketName: !Ref BucketName
+
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: cloud-resume-challenge
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: "ID"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "ID"
+          KeyType: "HASH"
   
   route53Record:
     Type: "AWS::Route53::RecordSetGroup"
