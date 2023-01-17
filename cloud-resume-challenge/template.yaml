@@ -14,6 +14,7 @@ Globals:
 Parameters:
   BucketName:
     Description: S3 Bucket Name
+    Type: String
     Default: mnguyen-bucket
 
   DomainName:

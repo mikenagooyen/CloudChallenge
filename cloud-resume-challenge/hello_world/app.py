@@ -34,6 +34,11 @@ def lambda_handler(event, context):
     #     raise e
 
     return {
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Origins": "*",
+        },
         "statusCode": 200,
         "body": json.dumps({
             "message": "hello world",
