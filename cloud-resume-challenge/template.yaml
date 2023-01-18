@@ -36,6 +36,8 @@ Resources:
       WebsiteConfiguration:
         IndexDocument: index.html
       BucketName: !Ref BucketName
+    Metadata:
+      Cache-Control: max-age=0
 
   DynamoDBTable:
     Type: AWS::DynamoDB::Table
@@ -78,7 +80,7 @@ Resources:
           - !Ref DomainName
         DefaultCacheBehavior:
           ViewerProtocolPolicy: "redirect-to-https"
-          TargetOriginId: !Sub ${resume}.s3.${AWS::Region}.amazonaws.com
+          TargetOriginId: !Sub ${resume}.s3-website-${AWS::Region}.amazonaws.com
           # "Managed-CachingOptimized" from https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html
           CachePolicyId: "658327ea-f89d-4fab-a63d-7e88639e58f6"
           ForwardedValues:
@@ -86,8 +88,8 @@ Resources:
         HttpVersion: "http2"
         IPV6Enabled: true
         Origins:
-          - DomainName: !Sub ${resume}.s3.${AWS::Region}.amazonaws.com
-            Id: !Sub ${resume}.s3.${AWS::Region}.amazonaws.com
+          - DomainName: !Sub ${resume}.s3-website-${AWS::Region}.amazonaws.com
+            Id: !Sub ${resume}.s3-website-${AWS::Region}.amazonaws.com
             CustomOriginConfig:
               HTTPPort: 80
               HTTPSPort: 443
@@ -122,6 +124,9 @@ Resources:
   GetFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
+      Policies:
+          - DynamoDBCrudPolicy:
+              TableName: cloud-resume-challenge
       CodeUri: get-function/
       Handler: app.get_function
       Runtime: python3.9
@@ -132,11 +137,14 @@ Resources:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /get
-            Method: get
+            Method: GET
 
   PutFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
+      Policies:
+          - DynamoDBCrudPolicy:
+              TableName: cloud-resume-challenge
       CodeUri: put-function/
       Handler: app.put_function
       Runtime: python3.9
@@ -147,4 +155,4 @@ Resources:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /put
-            Method: get
+            Method: GET

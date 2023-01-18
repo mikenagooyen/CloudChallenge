@@ -1,38 +1,32 @@
 import json
+import boto3
+import decimal
 
-# import requests
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, decimal.Decimal):
+            if o % 1 > 0:
+                return float(o)
+            else:
+                return int(o)
+        return super(DecimalEncoder, self).default(o)
 
 
 def put_function(event, context):
-    """Sample pure Lambda function
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table('cloud-resume-challenge')
 
-    Parameters
-    ----------
-    event: dict, required
-        API Gateway Lambda Proxy Input Format
-
-        Event doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-input-format
-
-    context: object, required
-        Lambda Context runtime methods and attributes
-
-        Context doc: https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html
-
-    Returns
-    ------
-    API Gateway Lambda Proxy Output Format: dict
-
-        Return doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
-    """
-
-    # try:
-    #     ip = requests.get("http://checkip.amazonaws.com/")
-    # except requests.RequestException as e:
-    #     # Send some context about this error to Lambda Logs
-    #     print(e)
-
-    #     raise e
-
+    response = table.update_item(
+        Key = {
+            "ID" : "visitors"
+        },
+        UpdateExpression = "set visitors = if_not_exists(visitors, :init) + :inc",
+        ExpressionAttributeValues = {
+            ":inc" : 1,
+            ":init": 0
+        },
+    )
+    
     return {
         "headers": {
             "Access-Control-Allow-Origin": "*",
@@ -40,8 +34,5 @@ def put_function(event, context):
             "Access-Control-Allow-Origins": "*",
         },
         "statusCode": 200,
-        "body": json.dumps({
-            "message": "hello world",
-            # "location": ip.text.replace("\n", "")
-        }),
+        "body": json.dumps(response["Attributes"]["visitors"], indent=4, cls=DecimalEncoder),
     }
