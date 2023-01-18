@@ -9,6 +9,6 @@ jobs:
       - uses: actions/checkout@v2
         
       - name: test get-function
-        run: cd CloudChallenge/cloud-resume-challenge/get-function && python test -v ./ && cd ../../
+        run: cloud-resume-challenge/get-function && python test -v ./ && cd ../../
       - name: test put-function
-        run: cd CloudChallenge/cloud-resume-challenge/get-function && python test -v ./ && cd ../../
+        run: cd cloud-resume-challenge/put-function && python test -v ./ && cd ../../
