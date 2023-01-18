@@ -36,8 +36,6 @@ Resources:
       WebsiteConfiguration:
         IndexDocument: index.html
       BucketName: !Ref BucketName
-    Metadata:
-      Cache-Control: max-age=0
 
   DynamoDBTable:
     Type: AWS::DynamoDB::Table
