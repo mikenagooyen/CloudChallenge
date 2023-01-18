@@ -1,16 +1,14 @@
 name: build
 on: push
 
-
 jobs:
   test-infra:
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
-      - name: checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         
-      -name: test get-function
+      - name: test get-function
         run: cd CloudChallenge/cloud-resume-challenge/get-function && python test -v ./ && cd ../../
-      -name: test put-function
+      - name: test put-function
         run: cd CloudChallenge/cloud-resume-challenge/get-function && python test -v ./ && cd ../../
