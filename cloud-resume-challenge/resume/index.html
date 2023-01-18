@@ -3,6 +3,7 @@
 <head>
     <script>
         fetch('https://02gzs4f8yg.execute-api.us-east-1.amazonaws.com/Prod/put')
+            .then(() => fetch('https://02gzs4f8yg.execute-api.us-east-1.amazonaws.com/Prod/get'))
             .then(response => response.json())
             .then((data) =>{
                 document.getElementById('viewerCount').innerText = data

@@ -16,7 +16,7 @@ def put_function(event, context):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('cloud-resume-challenge')
 
-    response = table.update_item(
+    table.update_item(
         Key = {
             "ID" : "visitors"
         },
@@ -34,5 +34,4 @@ def put_function(event, context):
             "Access-Control-Allow-Origins": "*",
         },
         "statusCode": 200,
-        "body": json.dumps(response["Attributes"]["visitors"], indent=4, cls=DecimalEncoder),
     }
