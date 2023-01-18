@@ -7,7 +7,12 @@ jobs:
     timeout-minutes: 2
     steps:
       - uses: actions/checkout@v2
-        
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: install
+        run: |
+          pip install boto3
       - name: test get-function
         run: cd cloud-resume-challenge/get-function && python app.py -v ./ && cd ../../
       - name: test put-function
